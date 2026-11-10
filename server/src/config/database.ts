@@ -66,17 +66,22 @@ export const connectDatabase = async (): Promise<typeof mongoose> => {
   }
 
   // 4. Development Environment: Try external persistent URI first
+  const isCloudCluster = config.db.uri.includes('mongodb+srv://') || (!config.db.uri.includes('localhost') && !config.db.uri.includes('127.0.0.1'));
   try {
     const safeUri = config.db.uri.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@');
     logger.info(`[DATABASE] Checking local/external MongoDB at: ${safeUri}...`);
     mongoose.set('strictQuery', true);
     await mongoose.connect(config.db.uri, {
-      serverSelectionTimeoutMS: 2000,
+      serverSelectionTimeoutMS: isCloudCluster ? 15000 : 2500,
     });
     activeDatabaseMode = 'EXTERNAL_PERSISTENT';
     logger.info(`[DATABASE] Mode: EXTERNAL PERSISTENT MONGODB connected at ${safeUri}`);
     return mongoose;
   } catch (externalErr: any) {
+    if (isCloudCluster) {
+      logger.error(`[DATABASE] Failed to connect to configured cloud MongoDB cluster: ${externalErr.message}`);
+      throw externalErr;
+    }
     logger.info(`[DATABASE] External MongoDB unavailable (${externalErr.message}).`);
     logger.info('[DATABASE] Activating EMBEDDED PERSISTENT database to guarantee data preservation across restarts...');
 
