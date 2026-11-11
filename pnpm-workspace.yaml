@@ -1,7 +1,0 @@
-packages:
-  - 'client'
-  - 'server'
-allowBuilds:
-  esbuild: set this to true or false
-  mongodb-memory-server: set this to true or false
-  msgpackr-extract: set this to true or false
