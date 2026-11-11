@@ -55,7 +55,7 @@ export const connectDatabase = async (): Promise<typeof mongoose> => {
       logger.info(`[DATABASE] Mode: PRODUCTION EXTERNAL CLUSTER -> Connecting to ${safeUri}`);
       mongoose.set('strictQuery', true);
       await mongoose.connect(config.db.uri, {
-        serverSelectionTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 15000,
       });
       logger.info('[DATABASE] Successfully connected to production MongoDB cluster.');
       return mongoose;
