@@ -3,16 +3,12 @@
   "services": {
     "client": {
       "root": "client",
-      "framework": "vite",
-      "installCommand": "npm install",
-      "buildCommand": "npm run build"
+      "framework": "vite"
     },
     "server": {
       "root": "server",
       "framework": "express",
-      "entrypoint": "index.js",
-      "installCommand": "npm install --omit=dev",
-      "buildCommand": "node -e \"console.log('server dist ready')\""
+      "entrypoint": "index.js"
     }
   },
   "rewrites": [
