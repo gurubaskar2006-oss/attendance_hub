@@ -106,18 +106,25 @@ app.use(async (req, res, next) => {
 
 // API Routes
 const apiPrefix = config.apiPrefix;
-app.use(`${apiPrefix}/auth`, authRoutes);
-app.use(`${apiPrefix}/platform`, platformRoutes);
-app.use(`${apiPrefix}/academic`, academicRoutes);
-app.use(`${apiPrefix}/students`, studentRoutes);
-app.use(`${apiPrefix}/staff`, staffRoutes);
-app.use(`${apiPrefix}/parents`, parentRoutes);
-app.use(`${apiPrefix}/attendance`, attendanceRoutes);
-app.use(`${apiPrefix}/examinations`, examinationRoutes);
-app.use(`${apiPrefix}/leave`, leaveRoutes);
-app.use(`${apiPrefix}/announcements`, announcementRoutes);
-app.use(`${apiPrefix}/notifications`, notificationRoutes);
-app.use(`${apiPrefix}/reports`, reportRoutes);
+const registerRoutes = (prefix: string) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/platform`, platformRoutes);
+  app.use(`${prefix}/academic`, academicRoutes);
+  app.use(`${prefix}/students`, studentRoutes);
+  app.use(`${prefix}/staff`, staffRoutes);
+  app.use(`${prefix}/parents`, parentRoutes);
+  app.use(`${prefix}/attendance`, attendanceRoutes);
+  app.use(`${prefix}/examinations`, examinationRoutes);
+  app.use(`${prefix}/leave`, leaveRoutes);
+  app.use(`${prefix}/announcements`, announcementRoutes);
+  app.use(`${prefix}/notifications`, notificationRoutes);
+  app.use(`${prefix}/reports`, reportRoutes);
+};
+
+registerRoutes(config.apiPrefix); // '/api/v1'
+if (config.apiPrefix !== '/v1') {
+  registerRoutes('/v1');
+}
 
 // 404 handler for undefined API routes
 app.use(`${apiPrefix}/*`, (req, res) => {

@@ -44,9 +44,18 @@ export const LoginPage: React.FC = () => {
         }
       }
     } catch (err: any) {
-      setError(
-        err.response?.data?.message || 'Login failed. Please check your credentials.'
-      );
+      console.error('Login error details:', err);
+      const data = err.response?.data;
+      const status = err.response?.status;
+      if (typeof data === 'string' && data.includes('<!DOCTYPE html>')) {
+        setError(`Backend API not reached (${status || 404}). The request to /api/v1 returned HTML instead of API data. In Vercel Project Settings, ensure Root Directory is set to ./ (root).`);
+      } else if (data?.message) {
+        setError(data.message);
+      } else if (status) {
+        setError(`Server error [${status}]: ${err.message}`);
+      } else {
+        setError(`Network error: ${err.message || 'Server unreachable. Please check API connection.'}`);
+      }
     } finally {
       setIsLoading(false);
     }
