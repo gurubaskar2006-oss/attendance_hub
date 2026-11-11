@@ -1,25 +1,40 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install && npm --prefix client install",
-  "buildCommand": "npm --prefix client run build",
-  "outputDirectory": "client/dist",
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "server/dist/**"
+  "services": {
+    "client": {
+      "root": "client",
+      "framework": "vite",
+      "installCommand": "npm install",
+      "buildCommand": "npm run build"
+    },
+    "server": {
+      "root": "server",
+      "framework": "express",
+      "entrypoint": "index.js",
+      "installCommand": "npm install --omit=dev",
+      "buildCommand": "node -e \"console.log('server dist ready')\""
     }
   },
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
+      "source": "/api/:path*",
+      "destination": {
+        "service": "server",
+        "path": "/api/:path*"
+      }
     },
     {
       "source": "/health",
-      "destination": "/api/index.js"
+      "destination": {
+        "service": "server",
+        "path": "/health"
+      }
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": {
+        "service": "client"
+      }
     }
   ]
 }
