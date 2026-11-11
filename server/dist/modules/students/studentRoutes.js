@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const studentController_1 = require("./studentController");
+const auth_1 = require("../../middleware/auth");
+const tenant_1 = require("../../middleware/tenant");
+const role_1 = require("../../middleware/role");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate, tenant_1.enforceTenant);
+router.get('/', studentController_1.getStudents);
+router.get('/:id', studentController_1.getStudentById);
+router.post('/', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL', 'COORDINATOR']), studentController_1.createStudent);
+router.put('/:id', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL', 'COORDINATOR']), studentController_1.updateStudent);
+router.post('/bulk-import', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL']), studentController_1.bulkImportStudents);
+router.post('/promote', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL']), studentController_1.promoteStudents);
+exports.default = router;

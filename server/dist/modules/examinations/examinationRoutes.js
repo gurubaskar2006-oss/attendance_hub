@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const examinationController_1 = require("./examinationController");
+const auth_1 = require("../../middleware/auth");
+const tenant_1 = require("../../middleware/tenant");
+const role_1 = require("../../middleware/role");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate, tenant_1.enforceTenant);
+router.get('/', examinationController_1.getExaminations);
+router.post('/', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL', 'COORDINATOR']), examinationController_1.createExamination);
+router.post('/:id/subjects', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL', 'COORDINATOR']), examinationController_1.configureExamSubject);
+router.get('/subjects/:examSubjectId/marks', examinationController_1.getMarksSheet);
+router.post('/subjects/:examSubjectId/marks', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL', 'COORDINATOR', 'TEACHER']), examinationController_1.saveMarks);
+router.patch('/:id/publish', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL']), examinationController_1.publishResults);
+router.get('/student/:studentId/report-card/:examinationId', examinationController_1.getStudentReportCard);
+exports.default = router;

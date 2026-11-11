@@ -1,7 +1,7 @@
 node_modules/
-dist/
+/dist/
 client/dist/
-server/dist/
+!server/dist/**
 .env
 .mongo-data/
 server/.mongo-data/

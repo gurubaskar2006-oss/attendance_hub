@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const leaveController_1 = require("./leaveController");
+const auth_1 = require("../../middleware/auth");
+const tenant_1 = require("../../middleware/tenant");
+const role_1 = require("../../middleware/role");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate, tenant_1.enforceTenant);
+router.get('/', leaveController_1.getLeaveRequests);
+router.post('/', (0, role_1.requireRole)(['PARENT', 'SCHOOL_ADMIN']), leaveController_1.submitLeaveRequest);
+router.patch('/:id/review', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL', 'COORDINATOR', 'TEACHER']), leaveController_1.reviewLeaveRequest);
+exports.default = router;

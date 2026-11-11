@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const reportController_1 = require("./reportController");
+const auth_1 = require("../../middleware/auth");
+const tenant_1 = require("../../middleware/tenant");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate, tenant_1.enforceTenant);
+router.get('/student/:studentId/exam/:examinationId/pdf', reportController_1.downloadReportCardPdf);
+router.get('/class/:classId/section/:sectionId/monthly-attendance/pdf', reportController_1.downloadMonthlyAttendancePdf);
+exports.default = router;

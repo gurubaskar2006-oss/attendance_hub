@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const staffController_1 = require("./staffController");
+const auth_1 = require("../../middleware/auth");
+const tenant_1 = require("../../middleware/tenant");
+const role_1 = require("../../middleware/role");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate, tenant_1.enforceTenant);
+router.get('/', staffController_1.getStaffList);
+router.post('/', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL']), staffController_1.createStaff);
+router.get('/:id', staffController_1.getStaffById);
+router.patch('/:id/status', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL']), staffController_1.toggleStaffStatus);
+router.post('/:id/reset-password', (0, role_1.requireRole)(['SCHOOL_ADMIN', 'PRINCIPAL']), staffController_1.resetStaffPassword);
+exports.default = router;
