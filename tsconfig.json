@@ -9,6 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["api/**/*", "server/src/**/*"],
+  "include": ["server/src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "client/**/*"]
 }
+

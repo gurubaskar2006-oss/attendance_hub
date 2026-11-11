@@ -72,8 +72,8 @@ if (config.env !== 'test') {
   app.use(morgan('dev'));
 }
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+// Health check endpoints
+const handleHealth = (req: express.Request, res: express.Response) => {
   res.status(200).json({
     status: 'UP',
     platform: 'School Operations Platform',
@@ -84,7 +84,10 @@ app.get('/health', (req, res) => {
     environment: config.env,
     databaseMode: activeDatabaseMode,
   });
-});
+};
+app.get('/health', handleHealth);
+app.get('/api/health', handleHealth);
+app.get(`${config.apiPrefix}/health`, handleHealth);
 
 // Ensure database is initialized before serving requests (critical for serverless environments)
 app.use(async (req, res, next) => {
